@@ -16,14 +16,28 @@
 
 from typing import Union, Callable, List
 
+import importlib
 import numpy as np
 import tensorflow as tf
 
-# TODO: Remove once https://github.com/tensorflow/tensorflow/issues/44613 is resolved
-if tf.__version__[:3] > "2.5":
-    from keras.engine import keras_tensor
+from packaging.version import Version
+
+# Find KerasTensor.
+if Version(tf.__version__).release >= Version("2.16").release:
+    # Determine if loading keras 2 or 3.
+    if (
+        hasattr(tf.keras, "version")
+        and Version(tf.keras.version()).release >= Version("3.0").release
+    ):
+        from keras import KerasTensor
+    else:
+        from tf_keras.src.engine.keras_tensor import KerasTensor
+elif Version(tf.__version__).release >= Version("2.13").release:
+    from keras.src.engine.keras_tensor import KerasTensor
+elif Version(tf.__version__).release >= Version("2.5").release:
+    from keras.engine.keras_tensor import KerasTensor
 else:
-    from tensorflow.python.keras.engine import keras_tensor
+    from tensorflow.python.keras.engine.keras_tensor import KerasTensor
 
 
 Number = Union[
@@ -46,7 +60,12 @@ Initializer = Union[None, dict, str, Callable, tf.keras.initializers.Initializer
 Regularizer = Union[None, dict, str, Callable, tf.keras.regularizers.Regularizer]
 Constraint = Union[None, dict, str, Callable, tf.keras.constraints.Constraint]
 Activation = Union[None, str, Callable]
-Optimizer = Union[tf.keras.optimizers.Optimizer, str]
+if importlib.util.find_spec("tensorflow.keras.optimizers.legacy") is not None:
+    Optimizer = Union[
+        tf.keras.optimizers.Optimizer, tf.keras.optimizers.legacy.Optimizer, str
+    ]
+else:
+    Optimizer = Union[tf.keras.optimizers.Optimizer, str]
 
 TensorLike = Union[
     List[Union[Number, list]],
@@ -56,7 +75,7 @@ TensorLike = Union[
     tf.Tensor,
     tf.SparseTensor,
     tf.Variable,
-    keras_tensor.KerasTensor,
+    KerasTensor,
 ]
 FloatTensorLike = Union[tf.Tensor, float, np.float16, np.float32, np.float64]
 AcceptableDTypes = Union[tf.DType, np.dtype, type, int, str, None]

@@ -21,7 +21,12 @@ limitations under the License.
 #include "tensorflow/core/framework/op_kernel.h"
 #include "tensorflow/core/framework/tensor_types.h"
 #include "tensorflow/core/platform/types.h"
+#include "tensorflow/core/public/version.h"
+#if TF_MAJOR_VERSION == 2 && TF_MINOR_VERSION >= 16
+#include "unsupported/Eigen/CXX11/Tensor"
+#else
 #include "third_party/eigen3/unsupported/Eigen/CXX11/Tensor"
+#endif
 
 namespace tensorflow {
 namespace addons {
@@ -117,12 +122,12 @@ EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE void EuclideanDistanceTransformSample(
       output[index] = Eigen::numext::sqrt(d[i]);
     }
   }
-  delete f;
-  delete d;
-  delete vh;
-  delete vw;
-  delete zh;
-  delete zw;
+  delete[] f;
+  delete[] d;
+  delete[] vh;
+  delete[] vw;
+  delete[] zh;
+  delete[] zw;
 }
 
 namespace functor {

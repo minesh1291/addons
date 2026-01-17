@@ -15,6 +15,7 @@
 """Conditional Gradient optimizer."""
 
 import tensorflow as tf
+from tensorflow_addons.optimizers import KerasLegacyOptimizer
 from tensorflow_addons.utils.types import FloatTensorLike
 
 from typeguard import typechecked
@@ -22,7 +23,7 @@ from typing import Union, Callable
 
 
 @tf.keras.utils.register_keras_serializable(package="Addons")
-class ConditionalGradient(tf.keras.optimizers.Optimizer):
+class ConditionalGradient(KerasLegacyOptimizer):
     """Optimizer that implements the Conditional Gradient optimization.
 
     This optimizer helps handle constraints well.
@@ -123,7 +124,7 @@ class ConditionalGradient(tf.keras.optimizers.Optimizer):
 
     @staticmethod
     def _frobenius_norm(m):
-        return tf.reduce_sum(m ** 2) ** 0.5
+        return tf.reduce_sum(m**2) ** 0.5
 
     @staticmethod
     def _top_singular_vector(m):

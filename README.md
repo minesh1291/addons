@@ -1,3 +1,20 @@
+
+<h2 align="center">
+ :warning: :warning: :warning:
+</h2>
+
+<h4 align="center">
+TensorFlow Addons (TFA) has ended development and introduction of new features.
+
+TFA has entered a minimal maintenance and release mode until a planned end of life 
+in May 2024. Please modify downstream libraries to take dependencies from other 
+repositories in our TensorFlow community (e.g. Keras, Keras-CV, and Keras-NLP)
+
+For more information see: [https://github.com/tensorflow/addons/issues/2807](https://github.com/tensorflow/addons/issues/2807)
+</h4>
+
+-----------------
+
 <div align="center">
   <img src="https://github.com/tensorflow/community/blob/master/sigs/logos/SIGAddons.png" width="60%"><br><br>
 </div>
@@ -14,7 +31,7 @@
 
 | Build      | Status |
 | ---             | ---    |
-| **Ubuntu/macOS/Windows**   | [![Status](https://github.com/tensorflow/addons/workflows/addons-release/badge.svg)](https://github.com/tensorflow/addons/actions?query=workflow%3Aaddons-release) |
+| **Ubuntu/macOS**   | [![Status](https://github.com/tensorflow/addons/actions/workflows/release.yml/badge.svg)](https://github.com/tensorflow/addons/actions?query=workflow%3Aaddons-release) |
 | **Ubuntu GPU custom ops**   | [![Status](https://storage.googleapis.com/tensorflow-kokoro-build-badges/addons/ubuntu-gpu-py3.svg)](https://storage.googleapis.com/tensorflow-kokoro-build-badges/addons/ubuntu-gpu-py3.html) |
 
 **TensorFlow Addons** is a repository of contributions that conform to
@@ -47,7 +64,8 @@ owners for all submodules.
 
 ## Installation
 #### Stable Builds
-TensorFlow Addons is available on PyPI for Linux, macOS, and Windows. To install the latest version, 
+TensorFlow Addons is available on PyPI for Linux & macOS (Windows support was dropped 
+due to [inconsistent TF2.15 whl packaging](https://github.com/tensorflow/tensorflow/issues/61830)). To install the latest version, 
 run the following:
 ```
 pip install tensorflow-addons
@@ -80,7 +98,14 @@ what it was tested against.
 #### Python Op Compatibility Matrix
 | TensorFlow Addons | TensorFlow | Python  |
 |:----------------------- |:---|:---------- |
-| tfa-nightly | 2.5, 2.6, 2.7 | 3.7, 3.8, 3.9 | 
+| tfa-nightly | 2.12, 2.13, 2.14 |3.9, 3.10, 3.11 |
+| tensorflow-addons-0.22.0 | 2.12, 2.13, 2.14 |3.9, 3.10, 3.11 |
+| tensorflow-addons-0.21.0 | 2.11, 2.12, 2.13 |3.8, 3.9, 3.10, 3.11 |
+| tensorflow-addons-0.20.0 | 2.10, 2.11, 2.12 |3.8, 3.9, 3.10, 3.11 |
+| tensorflow-addons-0.19.0 | 2.9, 2.10, 2.11 |3.7, 3.8, 3.9, 3.10 |
+| tensorflow-addons-0.18.0 | 2.8, 2.9, 2.10 |3.7, 3.8, 3.9, 3.10 |
+| tensorflow-addons-0.17.1 | 2.7, 2.8, 2.9 |3.7, 3.8, 3.9, 3.10 |
+| tensorflow-addons-0.16.1 | 2.6, 2.7, 2.8 |3.7, 3.8, 3.9, 3.10 |
 | tensorflow-addons-0.15.0 | 2.5, 2.6, 2.7 |3.7, 3.8, 3.9 |
 | tensorflow-addons-0.14.0 | 2.4, 2.5, 2.6 |3.6, 3.7, 3.8, 3.9 |
 | tensorflow-addons-0.13.0 | 2.3, 2.4, 2.5 |3.6, 3.7, 3.8, 3.9 |
@@ -110,7 +135,14 @@ is compiled differently. A typical example of this would be `conda`-installed Te
 #### C++ Custom Op Compatibility Matrix
 | TensorFlow Addons | TensorFlow | Compiler  | cuDNN | CUDA | 
 |:----------------------- |:---- |:---------|:---------|:---------|
-| tfa-nightly | 2.7 | GCC 7.3.1 | 8.1 | 11.2 |
+| tfa-nightly | 2.14  | GCC 9.3.1 | 8.6 | 11.8 |
+| tensorflow-addons-0.22.0 | 2.14  | GCC 9.3.1 | 8.6 | 11.8 |
+| tensorflow-addons-0.21.0 | 2.13  | GCC 9.3.1 | 8.6 | 11.8 |
+| tensorflow-addons-0.20.0 | 2.12  | GCC 9.3.1 | 8.6 | 11.8 |
+| tensorflow-addons-0.19.0 | 2.11  | GCC 9.3.1 | 8.1 | 11.2 |
+| tensorflow-addons-0.18.0 | 2.10  | GCC 9.3.1 | 8.1 | 11.2 |
+| tensorflow-addons-0.17.1 | 2.9  | GCC 9.3.1 | 8.1 | 11.2 |
+| tensorflow-addons-0.16.1 | 2.8  | GCC 7.3.1 | 8.1 | 11.2 |
 | tensorflow-addons-0.15.0 | 2.7  | GCC 7.3.1 | 8.1 | 11.2 |
 | tensorflow-addons-0.14.0 | 2.6  | GCC 7.3.1 | 8.1 | 11.2 |
 | tensorflow-addons-0.13.0 | 2.5  | GCC 7.3.1 | 8.1 | 11.2 |
@@ -161,7 +193,7 @@ cd addons
 export TF_NEED_CUDA="1"
 
 # Set these if the below defaults are different on your system
-export TF_CUDA_VERSION="11"
+export TF_CUDA_VERSION="12"
 export TF_CUDNN_VERSION="8"
 export CUDA_TOOLKIT_PATH="/usr/local/cuda"
 export CUDNN_INSTALL_PATH="/usr/lib/x86_64-linux-gnu"
@@ -319,3 +351,4 @@ improve the guide!).
 
 ## License
 [Apache License 2.0](LICENSE)
+

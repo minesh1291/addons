@@ -58,7 +58,7 @@ class CyclicalLearningRate(tf.keras.optimizers.schedules.LearningRateSchedule):
         ```
 
         You can pass this schedule directly into a
-        `tf.keras.optimizers.Optimizer` as the learning rate.
+        `tf.keras.optimizers.legacy.Optimizer` as the learning rate.
 
         Args:
             initial_learning_rate: A scalar `float32` or `float64` `Tensor` or
@@ -146,7 +146,7 @@ class TriangularCyclicalLearningRate(CyclicalLearningRate):
         ```
 
         You can pass this schedule directly into a
-        `tf.keras.optimizers.Optimizer` as the learning rate.
+        `tf.keras.optimizers.legacy.Optimizer` as the learning rate.
 
         Args:
             initial_learning_rate: A scalar `float32` or `float64` `Tensor` or
@@ -215,7 +215,7 @@ class Triangular2CyclicalLearningRate(CyclicalLearningRate):
         ```
 
         You can pass this schedule directly into a
-        `tf.keras.optimizers.Optimizer` as the learning rate.
+        `tf.keras.optimizers.legacy.Optimizer` as the learning rate.
 
         Args:
             initial_learning_rate: A scalar `float32` or `float64` `Tensor` or
@@ -286,7 +286,7 @@ class ExponentialCyclicalLearningRate(CyclicalLearningRate):
         ```
 
         You can pass this schedule directly into a
-        `tf.keras.optimizers.Optimizer` as the learning rate.
+        `tf.keras.optimizers.legacy.Optimizer` as the learning rate.
 
         Args:
             initial_learning_rate: A scalar `float32` or `float64` `Tensor` or
@@ -309,7 +309,7 @@ class ExponentialCyclicalLearningRate(CyclicalLearningRate):
             initial_learning_rate=initial_learning_rate,
             maximal_learning_rate=maximal_learning_rate,
             step_size=step_size,
-            scale_fn=lambda x: gamma ** x,
+            scale_fn=lambda x: gamma**x,
             scale_mode=scale_mode,
             name=name,
         )

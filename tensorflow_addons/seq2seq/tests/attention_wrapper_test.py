@@ -15,6 +15,7 @@
 """Tests for tfa.seq2seq.attention_wrapper."""
 
 import collections
+from packaging.version import Version
 
 import pytest
 import numpy as np
@@ -129,6 +130,9 @@ def test_save_load_layer(attention_cls):
     # using outputs of a layer in another layer's constructor.
     model.compile("rmsprop", "mse")
     y_ref = model.predict_on_batch([x_test, dummy_data.query, dummy_data.state])
+
+    if Version(tf.__version__) >= Version("2.13"):
+        model.use_legacy_config = True
 
     config = model.get_config()
     weights = model.get_weights()
@@ -398,7 +402,7 @@ def _test_with_attention(
                 seed=1337
             )
 
-    policy = tf.keras.mixed_precision.experimental.global_policy()
+    policy = tf.keras.mixed_precision.global_policy()
     sampler = sampler_py.TrainingSampler()
     my_decoder = basic_decoder.BasicDecoder(cell=cell, sampler=sampler)
     initial_state = cell.get_initial_state(
@@ -541,7 +545,7 @@ def set_random_state_for_tf_and_np():
 @pytest.mark.usefixtures("run_with_mixed_precision_policy")
 def test_bahdanau_not_normalized():
     set_random_state_for_tf_and_np()
-    policy = tf.keras.mixed_precision.experimental.global_policy()
+    policy = tf.keras.mixed_precision.global_policy()
     create_attention_mechanism = wrapper.BahdanauAttention
     create_attention_kwargs = {"kernel_initializer": "ones"}
     expected_final_output = basic_decoder.BasicDecoderOutput(
@@ -617,7 +621,7 @@ def test_bahdanau_normalized():
 @pytest.mark.usefixtures("run_with_mixed_precision_policy")
 def test_luong_not_normalized():
     set_random_state_for_tf_and_np()
-    policy = tf.keras.mixed_precision.experimental.global_policy()
+    policy = tf.keras.mixed_precision.global_policy()
     create_attention_mechanism = wrapper.LuongAttention
 
     expected_final_output = basic_decoder.BasicDecoderOutput(

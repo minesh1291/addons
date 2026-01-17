@@ -16,6 +16,7 @@
 
 import numpy as np
 import pytest
+from packaging.version import Version
 
 import tensorflow.compat.v2 as tf
 from tensorflow_addons.optimizers import AdaBelief, Lookahead
@@ -227,12 +228,51 @@ def test_scheduler_serialization():
     new_optimizer = tf.keras.optimizers.deserialize(config)
     assert new_optimizer.get_config() == optimizer.get_config()
 
-    assert new_optimizer.get_config()["learning_rate"] == {
-        "class_name": "ExponentialDecay",
-        "config": lr_scheduler.get_config(),
-    }
+    # TODO: Remove after 2.13 is oldest version supported due to new serialization
+    if Version(tf.__version__) >= Version("2.13"):
+        assert new_optimizer.get_config()["learning_rate"] == {
+            "class_name": "ExponentialDecay",
+            "config": lr_scheduler.get_config(),
+            "module": "keras.optimizers.schedules",
+            "registered_name": None,
+        }
+        assert new_optimizer.get_config()["weight_decay"] == {
+            "class_name": "InverseTimeDecay",
+            "config": wd_scheduler.get_config(),
+            "module": "keras.optimizers.schedules",
+            "registered_name": None,
+        }
 
-    assert new_optimizer.get_config()["weight_decay"] == {
-        "class_name": "InverseTimeDecay",
-        "config": wd_scheduler.get_config(),
-    }
+    else:
+        assert new_optimizer.get_config()["learning_rate"] == {
+            "class_name": "ExponentialDecay",
+            "config": lr_scheduler.get_config(),
+        }
+
+        assert new_optimizer.get_config()["weight_decay"] == {
+            "class_name": "InverseTimeDecay",
+            "config": wd_scheduler.get_config(),
+        }
+
+
+def test_checkpoint_serialization(tmpdir):
+    optimizer = AdaBelief()
+    optimizer2 = AdaBelief()
+
+    var_0 = tf.Variable([1.0, 2.0], dtype=tf.dtypes.float32)
+    var_1 = tf.Variable([3.0, 4.0], dtype=tf.dtypes.float32)
+
+    grad_0 = tf.constant([0.1, 0.2], dtype=tf.dtypes.float32)
+    grad_1 = tf.constant([0.03, 0.04], dtype=tf.dtypes.float32)
+
+    grads_and_vars = list(zip([grad_0, grad_1], [var_0, var_1]))
+
+    optimizer.apply_gradients(grads_and_vars)
+
+    checkpoint = tf.train.Checkpoint(optimizer=optimizer)
+    checkpoint2 = tf.train.Checkpoint(optimizer=optimizer2)
+    model_path = str(tmpdir / "adabelief_chkpt")
+    checkpoint.write(model_path)
+    checkpoint2.read(model_path)
+
+    optimizer2.apply_gradients(grads_and_vars)
